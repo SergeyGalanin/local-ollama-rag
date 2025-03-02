@@ -3,7 +3,7 @@ This script reads the database of information from local text files
 and uses a large language model to answer questions about their content.
 """
 
-from langchain_community.llms import CTransformers
+from langchain_ollama import OllamaLLM
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.prompts import PromptTemplate
@@ -19,9 +19,7 @@ Helpful answer:
 """
 
 # load the language model
-llm = CTransformers(model='./models/llama-2-7b-chat.ggmlv3.q8_0.bin',
-                    model_type='llama',
-                    config={'max_new_tokens': 256, 'temperature': 0.01})
+llm = OllamaLLM(model="llama3.1:8b")
 
 # load the interpreted information from the local database
 embeddings = HuggingFaceEmbeddings(
@@ -46,5 +44,9 @@ qa_llm = RetrievalQA.from_chain_type(llm=llm,
 
 # ask the AI chat about information in our local files
 prompt = "Who is the author of FftSharp? What is their favorite color?"
+output = qa_llm.invoke({'query': prompt})
+print(output["result"])
+
+prompt = "Why is JupyterGoBoom obsolete?"
 output = qa_llm.invoke({'query': prompt})
 print(output["result"])

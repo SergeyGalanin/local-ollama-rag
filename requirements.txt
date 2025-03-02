@@ -1,6 +1,6 @@
 langchain
 sentence_transformers
 faiss-cpu
-ctransformers
 langchain-community
 langchain-huggingface
+langchain_ollama
