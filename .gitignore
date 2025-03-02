@@ -171,3 +171,9 @@ cython_debug/
 .pypirc
 
 models/
+
+files/*
+!files/text1.txt
+!files/text2.txt
+
+faiss/

@@ -3,10 +3,10 @@ This script reads the database of information from local text files
 and uses a large language model to answer questions about their content.
 """
 
-from langchain.llms import CTransformers
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.vectorstores import FAISS
-from langchain import PromptTemplate
+from langchain_community.llms import CTransformers
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
+from langchain.prompts import PromptTemplate
 from langchain.chains import RetrievalQA
 
 # prepare the template we will use when prompting the AI
@@ -27,7 +27,11 @@ llm = CTransformers(model='./models/llama-2-7b-chat.ggmlv3.q8_0.bin',
 embeddings = HuggingFaceEmbeddings(
     model_name="sentence-transformers/all-MiniLM-L6-v2",
     model_kwargs={'device': 'cpu'})
-db = FAISS.load_local("faiss", embeddings)
+db = FAISS.load_local(
+    "faiss",
+    embeddings,
+    allow_dangerous_deserialization=True,
+    )
 
 # prepare a version of the llm pre-loaded with the local content
 retriever = db.as_retriever(search_kwargs={'k': 2})
@@ -42,5 +46,5 @@ qa_llm = RetrievalQA.from_chain_type(llm=llm,
 
 # ask the AI chat about information in our local files
 prompt = "Who is the author of FftSharp? What is their favorite color?"
-output = qa_llm({'query': prompt})
+output = qa_llm.invoke({'query': prompt})
 print(output["result"])

@@ -2,10 +2,10 @@
 This script creates a database of information gathered from local text files.
 """
 
-from langchain.document_loaders import DirectoryLoader, TextLoader
+from langchain_community.document_loaders import DirectoryLoader, TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.vectorstores import FAISS
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
 
 # define what documents to load
 loader = DirectoryLoader("./files/", glob="*.txt", loader_cls=TextLoader, loader_kwargs={'encoding': 'utf-8'})
